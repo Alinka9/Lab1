@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Свиток структуры проклятых данных</title>
+    <style>
+        body { font-family: Arial; background: #f0f0f0; }
+        .container { width: 1000px; margin: 20px auto; background: white; padding: 20px; border-radius: 10px; }
+        h1 { color: #4a2c2c; border-bottom: 3px solid #8b0000; }
+        .entity { border: 2px solid #333; margin: 20px 0; padding: 15px; border-radius: 10px; background: #f9f9f9; }
+        .mission { background: #e6f3ff; border-color: #0066cc; }
+        .curse { background: #ffe6e6; border-color: #cc0000; }
+        .sorcerer { background: #e6ffe6; border-color: #008000; }
+        .technique { background: #fff2e6; border-color: #ff6600; }
+        .relation { color: #666; font-style: italic; }
+        table { border-collapse: collapse; width: 100%; }
+        th { background: #333; color: white; padding: 8px; }
+        td { border: 1px solid #ddd; padding: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📜 Свиток структуры проклятых данных</h1>
+        
+        <div class="entity mission">
+            <h2>🏢 Миссия (Mission)</h2>
+            <p><strong>Атрибуты:</strong></p>
+            <ul>
+                <li>missionId: String - уникальный идентификатор миссии</li>
+                <li>date: LocalDate - дата проведения</li>
+                <li>location: String - место проведения</li>
+                <li>outcome: Outcome (SUCCESS/FAILURE) - результат</li>
+                <li>damageCost: int - стоимость ущерба</li>
+                <li>curse: Curse - проклятие-цель (композиция)</li>
+                <li>sorcerers: List<Sorcerer> - участвующие маги (агрегация)</li>
+                <li>techniques: List<Technique> - использованные техники (композиция)</li>
+            </ul>
+        </div>
+
+        <div class="entity curse">
+            <h2>👹 Проклятие (Curse)</h2>
+            <p><strong>Атрибуты:</strong></p>
+            <ul>
+                <li>name: String - имя проклятия</li>
+                <li>threatLevel: ThreatLevel (LOW/MEDIUM/HIGH/SPECIAL_GRADE) - уровень угрозы</li>
+            </ul>
+            <p class="relation">← Связано с миссией (одна миссия - одно проклятие)</p>
+        </div>
+
+        <div class="entity sorcerer">
+            <h2>⚔️ Маг (Sorcerer)</h2>
+            <p><strong>Атрибуты:</strong></p>
+            <ul>
+                <li>name: String - имя мага</li>
+                <li>rank: Rank (GRADE_4/GRADE_3/GRADE_2/GRADE_1/SPECIAL_GRADE) - ранг</li>
+            </ul>
+            <p class="relation">← Участвует в миссии (много магов в одной миссии)</p>
+        </div>
+
+        <div class="entity technique">
+            <h2>🔮 Техника (Technique)</h2>
+            <p><strong>Атрибуты:</strong></p>
+            <ul>
+                <li>name: String - название техники</li>
+                <li>type: TechniqueType (INNATE/CURSED_TOOL/SHIKIGAMI/BARRIER) - тип</li>
+                <li>owner: String - владелец (имя мага)</li>
+                <li>damage: int - нанесенный урон</li>
+            </ul>
+            <p class="relation">← Принадлежит магу, используется в миссии</p>
+        </div>
+
+        <h2>📊 Связи между сущностями:</h2>
+        <table>
+            <tr>
+                <th>Связь</th>
+                <th>Тип</th>
+                <th>Описание</th>
+            </tr>
+            <tr>
+                <td>Mission → Curse</td>
+                <td>Композиция</td>
+                <td>У каждой миссии есть ровно одно целевое проклятие</td>
+            </tr>
+            <tr>
+                <td>Mission → Sorcerer</td>
+                <td>Агрегация</td>
+                <td>В миссии участвует от 1 до N магов</td>
+            </tr>
+            <tr>
+                <td>Mission → Technique</td>
+                <td>Композиция</td>
+                <td>В миссии используется от 0 до N техник</td>
+            </tr>
+            <tr>
+                <td>Technique → Sorcerer</td>
+                <td>Ассоциация</td>
+                <td>Техника принадлежит конкретному магу (по имени)</td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
